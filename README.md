@@ -1,10 +1,71 @@
-# stream-forge
- Distributed Python Event Processor
+ # Stream Forge, R2 Week 1
+Project: Stream Forge  
+Domain: Distributed Systems and Big Data  
+Stack focus: Kafka, Bytewax, JSON schemas, serializers, streaming worker scaffold
 
-Python developers often use Java-based frameworks like Apache Flink or Spark to process massive streams of data, such as millions of IoT sensor
-readings.,Creating a pure-Python distributed stream processor that addresses fault tolerance, state management, and exactly-once processing 
-semantics is extremely challenging.,An example of this is seen in the case of an IoT fleet manager who needs to aggregate temperature data
-from 50,000 trucks every 10 seconds.,In this scenario, StreamForge, a custom Python streaming engine based on Apache Kafka and Faust, 
-is deployed with 20 parallel Python worker nodes.,The engine partitions the incoming data stream and the Python workers perform 'Windowed Aggregations' 
-by calculating the 5-minute rolling average temperature per truck.,If a worker node, such as Worker Node #4, experiences a crash, StreamForge automatically redistributes
-the partition to Worker #5 and retrieves its state from a RocksDB changelog.,This process ensures that no sensor reading is ever dropped or processed twice.
+## What this delivers
+
+Week 1 R2 tasks completed:
+
+| Day | Assigned task | Deliverable |
+|---|---|---|
+| Monday | Evaluate Faust vs Bytewax and select framework | ADR selecting Bytewax with tradeoff notes |
+| Tuesday | Scaffold streaming worker app and config | Python package, config layer, Docker Compose, Makefile |
+| Wednesday | Define topic schemas and serializers | Versioned telemetry schema, strict validation, JSON serializers |
+| Thursday | Build basic consumer connected to Kafka | Kafka consumer with validation and clean shutdown |
+| Friday | Integration test consumer against producer | Unit tests plus optional Kafka smoke test |
+
+## Architecture
+
+```text
+mock producer / R1 generator
+        |
+        v
+Kafka topic: truck.telemetry.raw
+        |
+        v
+R2 streaming worker
+  1. deserialize JSON
+  2. validate event schema
+  3. filter invalid business values
+  4. normalize into topology event
+        |
+        v
+Kafka topic: truck.telemetry.validated
+```
+
+## Quick start
+
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -e ".[dev]"
+cp .env.example .env
+pytest
+```
+
+## Run Kafka locally
+
+```bash
+docker compose up -d
+make create-topics
+make produce-samples
+make consume
+```
+
+## Run quality checks
+
+```bash
+make lint
+make typecheck
+make test
+```
+
+## Files to show in review
+
+- `docs/adr/0001-select-bytewax.md`
+- `docs/topic_schema.md`
+- `docs/week1_completion_report.md`
+- `src/stream_forge_r2/consumer.py`
+- `src/stream_forge_r2/topology.py`
+- `tests/`
