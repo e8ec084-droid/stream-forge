@@ -20,7 +20,6 @@ from enum import Enum, auto
 
 from stream_forge_r2.schemas import TelemetryEventV1, ValidatedTelemetryEventV1
 
-
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------

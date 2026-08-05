@@ -12,8 +12,6 @@ from __future__ import annotations
 
 import time
 
-
-
 from stream_forge_r2.schemas import TelemetryEventV1
 from stream_forge_r2.topology import (
     FilterReason,
@@ -24,7 +22,6 @@ from stream_forge_r2.topology import (
     process_event,
     transform_to_validated_event,
 )
-
 
 # ---------------------------------------------------------------------------
 # Fixtures / helpers

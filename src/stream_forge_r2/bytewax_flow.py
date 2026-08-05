@@ -28,7 +28,6 @@ Design decisions
 
 from __future__ import annotations
 
-
 import logging
 
 import bytewax.operators as op
