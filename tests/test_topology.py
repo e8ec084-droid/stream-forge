@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import time
 
-import pytest
+
 
 from stream_forge_r2.schemas import TelemetryEventV1
 from stream_forge_r2.topology import (
@@ -30,7 +30,11 @@ from stream_forge_r2.topology import (
 # Fixtures / helpers
 # ---------------------------------------------------------------------------
 
-def make_event(temp: float, truck_id: str = "truck-0001", source: str = "unit-test") -> TelemetryEventV1:
+def make_event(
+    temp: float, 
+    truck_id: str = "truck-0001",
+     source: str = "unit-test",
+     ) -> TelemetryEventV1:
     return TelemetryEventV1(
         truck_id=truck_id,
         temperature_c=temp,
@@ -197,7 +201,11 @@ class TestProcessEventComposition:
         assert out is not None
 
     def test_multiple_trucks_processed_independently(self) -> None:
-        events = [make_event(t, truck_id=f"truck-{i:04d}") for i, t in enumerate([5.0, 0.0, -5.0, 80.0])]
+        events = [make_event(t, 
+        truck_id=f"truck-{i:04d}") 
+        for i, t in enumerate([5.0, 0.0, 
+        -5.0, 80.0])
+        ]
         results = [process_event(e) for e in events]
         assert results[0] is not None   # 5.0  → pass
         assert results[1] is None       # 0.0  → dropped (non-positive)

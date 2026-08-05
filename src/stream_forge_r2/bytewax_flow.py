@@ -28,12 +28,12 @@ Design decisions
 
 from __future__ import annotations
 
-import json
+
 import logging
 
-from bytewax.connectors.kafka import KafkaSinkMessage, KafkaSources, KafkaSink
-from bytewax.dataflow import Dataflow
 import bytewax.operators as op
+from bytewax.connectors.kafka import KafkaSink, KafkaSinkMessage, KafkaSources
+from bytewax.dataflow import Dataflow
 
 from stream_forge_r2.config import get_settings
 from stream_forge_r2.schemas import TelemetryEventV1
