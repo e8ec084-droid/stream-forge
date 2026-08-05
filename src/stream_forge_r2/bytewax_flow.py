@@ -53,7 +53,7 @@ logger = logging.getLogger(__name__)
 def _parse_and_process(
     kafka_msg: tuple[bytes | None, bytes | None],
     bounds: TemperatureBounds,
-) -> KafkaSinkMessage[bytes, bytes] | None: | None:
+) -> KafkaSinkMessage[bytes, bytes] | None: 
     """Deserialise, filter, and map a raw Kafka message.
 
     Returns a KafkaSinkMessage ready for the sink, or None to drop the message.
