@@ -31,7 +31,7 @@ from __future__ import annotations
 import logging
 
 import bytewax.operators as op
-from bytewax.connectors.kafka import KafkaSink, KafkaSinkMessage, KafkaSources
+from bytewax.connectors.kafka import KafkaSink, KafkaSinkMessage, KafkaSource
 from bytewax.dataflow import Dataflow
 
 from stream_forge_r2.config import get_settings
@@ -53,7 +53,7 @@ logger = logging.getLogger(__name__)
 def _parse_and_process(
     kafka_msg: tuple[bytes | None, bytes | None],
     bounds: TemperatureBounds,
-) -> KafkaSinkMessage | None:
+) -> KafkaSinkMessage[bytes, bytes] | None: | None:
     """Deserialise, filter, and map a raw Kafka message.
 
     Returns a KafkaSinkMessage ready for the sink, or None to drop the message.
@@ -118,7 +118,7 @@ def build_flow(
     flow = Dataflow("stream-forge-r2-topology")
 
     # ── Step 1: Consume from Kafka ──────────────────────────────────────────
-    kafka_input = KafkaSources(
+    kafka_input = KafkaSource(
         brokers=[_bootstrap],
         topics=[_input],
         add_config={
