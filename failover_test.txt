@@ -1,0 +1,12 @@
+Stream Forge: Broker Failover Test Results
+Role 1: Kafka Infrastructure Lead
+
+Test Execution:
+1. Initiated continuous telemetry generation via producer.py.
+2. Intentionally simulated a broker failure by stopping the Kafka Docker container.
+3. Observed producer entering retry state (retries: 5) without crashing or dropping data.
+4. Restarted the Kafka broker container.
+5. Observed producer automatically reconnect and flush pending messages to the topic.
+
+Conclusion:
+Broker failover test successful. The 'acks=all' and retry configurations successfully prevented data loss during the outage.
