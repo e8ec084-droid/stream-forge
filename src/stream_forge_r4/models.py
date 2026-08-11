@@ -1,14 +1,19 @@
 from dataclasses import dataclass
 
-
 @dataclass
 class TruckState:
     """
-    Current state maintained for each truck.
+    Represents the latest aggregated state of a truck.
     """
 
     truck_id: str
-    last_temperature: float
+
+    avg_temperature: float
+
     event_count: int
-    last_timestamp: int
+
+    window_start: int
+
+    window_end: int
+
     status: str = "healthy"
