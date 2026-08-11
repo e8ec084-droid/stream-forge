@@ -1,3 +1,5 @@
+from collections.abc import Iterator
+
 import pytest
 
 from stream_forge_r4.models import TruckState
@@ -5,14 +7,14 @@ from stream_forge_r4.store import RocksDBStore
 
 
 @pytest.fixture
-def store():
+def store() -> Iterator[RocksDBStore]:
     store = RocksDBStore()
     yield store
     store.delete("test-truck-001")
     store.close()
 
 
-def test_put_and_get(store):
+def test_put_and_get(store: RocksDBStore) -> None:
     state = TruckState(
         truck_id="test-truck-001",
         avg_temperature=25.0,
@@ -29,13 +31,13 @@ def test_put_and_get(store):
     assert result == state
 
 
-def test_get_missing_returns_none(store):
+def test_get_missing_returns_none(store: RocksDBStore) -> None:
     result = store.get("does-not-exist")
 
     assert result is None
 
 
-def test_delete(store):
+def test_delete(store: RocksDBStore) -> None:
     state = TruckState(
         truck_id="test-truck-001",
         avg_temperature=25.0,
@@ -51,7 +53,7 @@ def test_delete(store):
     result = store.get("test-truck-001")
 
     assert result is None
-def test_put_window_result(store):
+def test_put_window_result(store: RocksDBStore) -> None:
     store.put_window_result(
         truck_id="test-truck-window",
         avg_temperature=27.5,

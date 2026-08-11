@@ -9,11 +9,11 @@ from stream_forge_r4.models import TruckState
 class RocksDBStore:
     """Simple wrapper around RocksDict."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         settings = get_settings()
         self.db = Rdict(settings.db_path)
 
-    def put(self, state: TruckState):
+    def put(self, state: TruckState) -> None:
         self.db[state.truck_id] = json.dumps(state.__dict__)  
 
     def put_window_result(
@@ -24,7 +24,7 @@ class RocksDBStore:
         window_start: int,
         window_end: int,
         status: str = "healthy",
-    ):
+    ) -> None:
         """Persist the latest aggregated window result for a truck."""
         state = TruckState(
             truck_id=truck_id,
@@ -37,7 +37,7 @@ class RocksDBStore:
 
         self.put(state)
 
-    def get(self, truck_id: str):
+    def get(self, truck_id: str) -> TruckState | None:
         data = self.db.get(truck_id)
 
         if data is None:
@@ -45,8 +45,8 @@ class RocksDBStore:
 
         return TruckState(**json.loads(data))
 
-    def delete(self, truck_id: str):
+    def delete(self, truck_id: str) -> None:
         self.db.delete(truck_id)
 
-    def close(self):
+    def close(self) -> None:
         self.db.close()
