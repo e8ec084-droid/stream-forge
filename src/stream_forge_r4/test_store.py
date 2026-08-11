@@ -51,3 +51,22 @@ def test_delete(store):
     result = store.get("test-truck-001")
 
     assert result is None
+def test_put_window_result(store):
+    store.put_window_result(
+        truck_id="test-truck-window",
+        avg_temperature=27.5,
+        event_count=10,
+        window_start=1723120000,
+        window_end=1723120060,
+        status="healthy",
+    )
+
+    result = store.get("test-truck-window")
+
+    assert result is not None
+    assert result.truck_id == "test-truck-window"
+    assert result.avg_temperature == 27.5
+    assert result.event_count == 10
+    assert result.window_start == 1723120000
+    assert result.window_end == 1723120060
+    assert result.status == "healthy"
