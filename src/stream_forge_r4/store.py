@@ -1,5 +1,6 @@
-from rocksdict import Rdict
 import json
+
+from rocksdict import Rdict
 
 from stream_forge_r4.config import get_settings
 from stream_forge_r4.models import TruckState

@@ -1,7 +1,7 @@
 import pytest
 
-from stream_forge_r4.store import RocksDBStore
 from stream_forge_r4.models import TruckState
+from stream_forge_r4.store import RocksDBStore
 
 
 @pytest.fixture
