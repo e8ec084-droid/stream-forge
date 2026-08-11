@@ -6,7 +6,9 @@ This project contains only the coding work for **R6: React Flow Dashboard Develo
 - Week 1: Scaffold React app with React Flow, build topology canvas skeleton, create placeholder DAG nodes, connect to mock API, style baseline theme
 - Week 2: Build DAG visualization bound to live topology, add node status indicators, connect FastAPI metrics endpoint stub, polish DAG edges and animations, improve usability
 - Mid-Project Review: Build live audit visualization panel, wire real-time throughput numbers, add per-partition breakdown view, add windowing-correctness widget
-- Week 3
+- Week 3 : Build telemetry dashboard (per-stream metrics, worker health)
+
+Add live partition-rebalancing visualization
 
 ## Run backend
 cd backend
