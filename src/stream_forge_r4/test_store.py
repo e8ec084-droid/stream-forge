@@ -91,3 +91,28 @@ def test_write_and_get_changelog(store: RocksDBStore) -> None:
     assert entry["truck_id"] == "test-truck-changelog"
     assert entry["state"]["avg_temperature"] == 28.5
     assert entry["state"]["event_count"] == 5
+def test_state_read_latency(store: RocksDBStore) -> None:
+    import time
+
+    state = TruckState(
+        truck_id="latency-truck-001",
+        avg_temperature=26.5,
+        event_count=10,
+        window_start=1723120000,
+        window_end=1723120060,
+        status="healthy",
+    )
+
+    store.put(state)
+
+    start = time.perf_counter()
+
+    for _ in range(100):
+        result = store.get("latency-truck-001")
+        assert result is not None
+
+    elapsed = time.perf_counter() - start
+
+    assert elapsed < 1.0
+
+    store.delete("latency-truck-001")
