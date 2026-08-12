@@ -72,3 +72,22 @@ def test_put_window_result(store: RocksDBStore) -> None:
     assert result.window_start == 1723120000
     assert result.window_end == 1723120060
     assert result.status == "healthy"
+def test_write_and_get_changelog(store: RocksDBStore) -> None:
+    state = TruckState(
+        truck_id="test-truck-changelog",
+        avg_temperature=28.5,
+        event_count=5,
+        window_start=1723120000,
+        window_end=1723120060,
+        status="healthy",
+    )
+
+    key = store.write_changelog(state)
+
+    entry = store.get_changelog(key)
+
+    assert entry is not None
+    assert entry["operation"] == "upsert"
+    assert entry["truck_id"] == "test-truck-changelog"
+    assert entry["state"]["avg_temperature"] == 28.5
+    assert entry["state"]["event_count"] == 5
