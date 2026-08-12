@@ -22,6 +22,10 @@ class RocksDBSettings(BaseSettings):
         default=True,
         alias="ROCKSDB_CREATE_IF_MISSING",
     )
+    ttl_seconds: int = Field(
+        default=3600,
+        alias="ROCKSDB_TTL_SECONDS",
+    )
 
 
 @lru_cache(maxsize=1)
