@@ -39,11 +39,12 @@ def delivery_report(error: KafkaError | None, message: Message) -> None:
     if error is not None:
         logger.error("delivery_failed topic=%s error=%s", message.topic(), error)
     else:
-        logger.debug("delivery_ok topic=%s "
-        "partition=%s offset=%s", 
-        message.topic(),
-         message.partition(), 
-         message.offset())
+        logger.debug(
+            "delivery_ok topic=%s partition=%s offset=%s",
+            message.topic(),
+            message.partition(),
+            message.offset(),
+        )
 
 
 def handle_message(
@@ -97,15 +98,19 @@ def run_consumer(
             message = consumer.poll(1.0)
             if message is None:
                 continue
-            error=message.error()
+
+            error = message.error()
             if error is not None:
                 if error.code() == KafkaError._PARTITION_EOF:
                     continue
-                raise KafkaException(message.error())
+                raise KafkaException(error)
 
-            value=message.value()
+            value = message.value()
             if value is None:
+                logger.warning("empty_message_value topic=%s", message.topic())
+                consumer.commit(message=message, asynchronous=False)
                 continue
+
             handle_message(value, producer, settings.output_topic, bounds, stats)
             consumer.commit(message=message, asynchronous=False)
     finally:
