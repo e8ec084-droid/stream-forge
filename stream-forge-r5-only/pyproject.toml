@@ -1,0 +1,42 @@
+[project]
+name = "stream-forge-r5"
+version = "0.1.0"
+description = "Stream Forge R5: observability, throughput audits, and chaos testing"
+requires-python = ">=3.10"
+dependencies = [
+  "confluent-kafka>=2.5.0",
+  "prometheus-client>=0.20.0",
+  "pydantic>=2.7.0",
+  "pydantic-settings>=2.3.0",
+  "fastapi>=0.111.0",
+  "uvicorn>=0.30.0",
+  "pyyaml>=6.0.1",
+  "python-dotenv>=1.0.1",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8.2.0",
+  "pytest-cov>=5.0.0",
+  "ruff>=0.5.0",
+  "mypy>=1.10.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q --disable-warnings"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+mypy_path = "src"
+ignore_missing_imports = true

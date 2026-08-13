@@ -1,0 +1,38 @@
+{
+  "title": "Stream Forge — R5 Observability",
+  "timezone": "browser",
+  "refresh": "5s",
+  "panels": [
+    {
+      "id": 1,
+      "title": "Events Consumed / sec",
+      "type": "timeseries",
+      "gridPos": { "x": 0, "y": 0, "w": 12, "h": 8 },
+      "targets": [{ "expr": "sum(rate(stream_forge_events_consumed_total[1m])) by (topic)" }]
+    },
+    {
+      "id": 2,
+      "title": "Consumer Lag by Partition",
+      "type": "timeseries",
+      "gridPos": { "x": 12, "y": 0, "w": 12, "h": 8 },
+      "targets": [{ "expr": "stream_forge_consumer_lag" }]
+    },
+    {
+      "id": 3,
+      "title": "Broker Up",
+      "type": "stat",
+      "gridPos": { "x": 0, "y": 8, "w": 6, "h": 6 },
+      "targets": [{ "expr": "stream_forge_broker_up" }]
+    },
+    {
+      "id": 4,
+      "title": "Invalid / Filtered Events",
+      "type": "timeseries",
+      "gridPos": { "x": 6, "y": 8, "w": 18, "h": 6 },
+      "targets": [
+        { "expr": "sum(rate(stream_forge_events_invalid_total[1m])) by (reason)" },
+        { "expr": "sum(rate(stream_forge_events_filtered_total[1m]))" }
+      ]
+    }
+  ]
+}

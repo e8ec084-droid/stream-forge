@@ -1,0 +1,31 @@
+groups:
+- name: stream-forge-r5
+  rules:
+  - alert: StreamForgeConsumerLagWarning
+    expr: stream_forge_consumer_lag > 1000
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Consumer lag exceeded the warning threshold
+  - alert: StreamForgeConsumerLagCritical
+    expr: stream_forge_consumer_lag > 5000
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: Consumer lag exceeded the critical threshold
+  - alert: StreamForgeBrokerDown
+    expr: stream_forge_broker_up == 0
+    for: 2m
+    labels:
+      severity: critical
+    annotations:
+      summary: Kafka broker is not responding to metadata requests
+  - alert: StreamForgeThroughputBelowTarget
+    expr: sum(rate(stream_forge_events_consumed_total[5m])) < 80000.0
+    for: 2m
+    labels:
+      severity: warning
+    annotations:
+      summary: Throughput dropped below 80% of target
