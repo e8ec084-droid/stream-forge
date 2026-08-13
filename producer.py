@@ -12,7 +12,8 @@ conf = {
     'compression.type': 'lz4',
     'retries': 5,
     'retry.backoff.ms': 500,
-    'delivery.timeout.ms': 120000
+    'delivery.timeout.ms': 120000,
+    'acks': 'all'
 }
 
 producer = Producer(conf)
