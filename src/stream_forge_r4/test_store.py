@@ -116,3 +116,31 @@ def test_state_read_latency(store: RocksDBStore) -> None:
     assert elapsed < 1.0
 
     store.delete("latency-truck-001")
+def test_sustained_updates_consistency(store: RocksDBStore) -> None:
+    truck_id = "sustained-truck-001"
+
+    for i in range(500):
+        state = TruckState(
+            truck_id=truck_id,
+            avg_temperature=20.0 + i,
+            event_count=i,
+            window_start=1723120000 + i,
+            window_end=1723120060 + i,
+            status="healthy",
+        )
+
+        store.put(state)
+
+        result = store.get(truck_id)
+
+        assert result is not None
+        assert result.truck_id == truck_id
+        assert result.avg_temperature == 20.0 + i
+        assert result.event_count == i
+        assert result.window_start == 1723120000 + i
+        assert result.window_end == 1723120060 + i
+        assert result.status == "healthy"
+
+    store.delete(truck_id)
+
+    assert store.get(truck_id) is None
