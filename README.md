@@ -1,4 +1,7 @@
- # Stream Forge, R2 Week 1
+# Stream Forge, R2 Week 1
+
+Professional intern deliverable for **R2: Stream Topology Engineer**.
+
 Project: Stream Forge  
 Domain: Distributed Systems and Big Data  
 Stack focus: Kafka, Bytewax, JSON schemas, serializers, streaming worker scaffold
