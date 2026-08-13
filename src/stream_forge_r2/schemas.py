@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, UTC
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
@@ -19,7 +19,7 @@ class TelemetryEventV1(BaseModel):
     @classmethod
     def timestamp_must_be_reasonable(cls, value: int) -> int:
         # Reject values before 2020 to catch seconds accidentally sent as milliseconds.
-        min_ms = int(datetime(2020, 1, 1, tzinfo=timezone.utc).timestamp() * 1000)
+        min_ms = int(datetime(2020, 1, 1, tzinfo=UTC).timestamp() * 1000)
         if value < min_ms:
             raise ValueError("timestamp_ms must be epoch milliseconds, not seconds")
         return value
