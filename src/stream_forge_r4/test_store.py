@@ -53,6 +53,8 @@ def test_delete(store: RocksDBStore) -> None:
     result = store.get("test-truck-001")
 
     assert result is None
+
+
 def test_put_window_result(store: RocksDBStore) -> None:
     store.put_window_result(
         truck_id="test-truck-window",
@@ -72,6 +74,10 @@ def test_put_window_result(store: RocksDBStore) -> None:
     assert result.window_start == 1723120000
     assert result.window_end == 1723120060
     assert result.status == "healthy"
+
+    store.delete("test-truck-window")
+
+
 def test_write_and_get_changelog(store: RocksDBStore) -> None:
     state = TruckState(
         truck_id="test-truck-changelog",
@@ -91,9 +97,9 @@ def test_write_and_get_changelog(store: RocksDBStore) -> None:
     assert entry["truck_id"] == "test-truck-changelog"
     assert entry["state"]["avg_temperature"] == 28.5
     assert entry["state"]["event_count"] == 5
-def test_state_read_latency(store: RocksDBStore) -> None:
-    import time
 
+
+def test_state_read_latency(store: RocksDBStore) -> None:
     state = TruckState(
         truck_id="latency-truck-001",
         avg_temperature=26.5,
@@ -104,6 +110,8 @@ def test_state_read_latency(store: RocksDBStore) -> None:
     )
 
     store.put(state)
+
+    import time
 
     start = time.perf_counter()
 
@@ -116,6 +124,8 @@ def test_state_read_latency(store: RocksDBStore) -> None:
     assert elapsed < 1.0
 
     store.delete("latency-truck-001")
+
+
 def test_sustained_updates_consistency(store: RocksDBStore) -> None:
     truck_id = "sustained-truck-001"
 
@@ -144,3 +154,31 @@ def test_sustained_updates_consistency(store: RocksDBStore) -> None:
     store.delete(truck_id)
 
     assert store.get(truck_id) is None
+
+
+def test_changelog_integrity(store: RocksDBStore) -> None:
+    entries = []
+
+    for i in range(10):
+        state = TruckState(
+            truck_id=f"changelog-truck-{i}",
+            avg_temperature=20.0 + i,
+            event_count=i,
+            window_start=1723120000 + i,
+            window_end=1723120060 + i,
+            status="healthy",
+        )
+
+        key = store.write_changelog(state)
+        entry = store.get_changelog(key)
+
+        assert entry is not None
+        assert entry["operation"] == "upsert"
+        assert entry["truck_id"] == state.truck_id
+
+        entries.append(entry)
+
+    sequences = [entry["sequence"] for entry in entries]
+
+    assert len(set(sequences)) == len(sequences)
+    assert sequences == sorted(sequences)
