@@ -9,6 +9,7 @@ dependencies = [
   "pydantic>=2.7.0",
   "pydantic-settings>=2.3.0",
   "python-dotenv>=1.0.1",
+  "rocksdict>=0.3.29",
 ]
 
 [project.optional-dependencies]
