@@ -1,11 +1,11 @@
 import json
 import os
-from typing import Any
+from collections.abc import Iterable, Iterator
+from typing import Any, cast
 
 from confluent_kafka import Producer
 
 from stream_forge_r4.store import RocksDBStore
-
 
 CHANGELOG_PREFIX = "__changelog__:"
 
@@ -23,10 +23,16 @@ class ChangelogBackup:
         self.producer = producer
         self.topic = topic
 
-    def iter_changelog(self):
+    def iter_changelog(self) -> Iterator[tuple[str, Any]]:
         """Yield persisted changelog entries from RocksDB."""
-        for raw_key in self.store.db.keys():
-            key = raw_key.decode() if isinstance(raw_key, bytes) else str(raw_key)
+        db = cast(Iterable[bytes | str], self.store.db)
+
+        for raw_key in db:
+            key = (
+                raw_key.decode()
+                if isinstance(raw_key, bytes)
+                else str(raw_key)
+            )
 
             if not key.startswith(CHANGELOG_PREFIX):
                 continue
@@ -88,4 +94,3 @@ def create_backup(store: RocksDBStore) -> ChangelogBackup:
         producer=producer,
         topic=topic,
     )
- 
