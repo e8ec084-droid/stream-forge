@@ -28,11 +28,7 @@ class ChangelogBackup:
         db = cast(Iterable[bytes | str], self.store.db)
 
         for raw_key in db:
-            key = (
-                raw_key.decode()
-                if isinstance(raw_key, bytes)
-                else str(raw_key)
-            )
+            key = raw_key.decode() if isinstance(raw_key, bytes) else str(raw_key)
 
             if not key.startswith(CHANGELOG_PREFIX):
                 continue
@@ -42,11 +38,7 @@ class ChangelogBackup:
             if raw_value is None:
                 continue
 
-            value = (
-                raw_value.decode()
-                if isinstance(raw_value, bytes)
-                else str(raw_value)
-            )
+            value = raw_value.decode() if isinstance(raw_value, bytes) else str(raw_value)
 
             yield key, json.loads(value)
 

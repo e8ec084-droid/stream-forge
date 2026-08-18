@@ -26,6 +26,10 @@ class RocksDBSettings(BaseSettings):
         default=3600,
         alias="ROCKSDB_TTL_SECONDS",
     )
+    snapshot_interval_seconds: int = Field(
+        default=60,
+        alias="ROCKSDB_SNAPSHOT_INTERVAL_SECONDS",
+    )
 
 
 @lru_cache(maxsize=1)

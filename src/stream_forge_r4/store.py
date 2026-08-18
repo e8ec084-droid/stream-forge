@@ -113,6 +113,15 @@ class RocksDBStore:
         self.db.delete(truck_id)
         self.db.delete(f"{self.EXPIRY_PREFIX}{truck_id}")
 
+    def snapshot(self) -> None:
+        """Persist a RocksDB snapshot marker."""
+
+        settings = get_settings()
+        snapshot_time = time.time()
+
+        self.db["__snapshot__:timestamp"] = json.dumps(snapshot_time)
+        self.db["__snapshot__:interval"] = json.dumps(settings.snapshot_interval_seconds)
+
     def close(self) -> None:
         """Close the underlying database."""
 

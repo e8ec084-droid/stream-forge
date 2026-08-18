@@ -19,25 +19,18 @@ class ChangelogRestorer:
     ) -> None:
         self.store = store
 
-        self.bootstrap_servers = (
-            bootstrap_servers
-            or os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+        self.bootstrap_servers = bootstrap_servers or os.getenv(
+            "KAFKA_BOOTSTRAP_SERVERS", "localhost:9092"
         )
 
-        self.topic = (
-            topic
-            or os.getenv(
-                "KAFKA_CHANGELOG_TOPIC",
-                "stream-forge.r4.changelog",
-            )
+        self.topic = topic or os.getenv(
+            "KAFKA_CHANGELOG_TOPIC",
+            "stream-forge.r4.changelog",
         )
 
-        self.group_id = (
-            group_id
-            or os.getenv(
-                "KAFKA_RESTORE_GROUP_ID",
-                "stream-forge-r4-restore",
-            )
+        self.group_id = group_id or os.getenv(
+            "KAFKA_RESTORE_GROUP_ID",
+            "stream-forge-r4-restore",
         )
 
     def _consumer(self) -> Consumer:
