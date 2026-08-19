@@ -69,3 +69,37 @@ make test
 - `src/stream_forge_r2/consumer.py`
 - `src/stream_forge_r2/topology.py`
 - `tests/`
+
+## R4 State Store
+
+The R4 state store uses RocksDB to persist the latest state for each truck.
+The `RocksDBStore` provides persistent local state storage for stream
+processing and supports recovery through a Kafka changelog.
+
+### State Store Operations
+
+- `put(state)` stores or updates a truck's current state.
+- `get(truck_id)` retrieves the persisted state for a truck.
+- `delete(truck_id)` removes a truck's persisted state.
+- `put_window_result(...)` stores window-processing results.
+- `write_changelog(state)` creates a changelog record for state recovery.
+- `get_changelog(key)` retrieves a previously written changelog record.
+
+### State Recovery
+
+State changes are recorded in the Kafka changelog so that persisted state
+can be reconstructed after a failure.
+
+The recovery flow is:
+
+Kafka changelog → `ChangelogRestorer` → `RocksDBStore` → restored state.
+
+The changelog records support `upsert` and `delete` operations. The recovery
+consumer reads records from the beginning of the changelog and applies them
+to the RocksDB state store.
+
+### Fault Tolerance
+
+RocksDB provides local persistent state storage while the Kafka changelog
+provides a recovery mechanism. This allows the state store to be rebuilt
+from changelog records when required.
