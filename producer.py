@@ -1,7 +1,8 @@
 import json
-import time
 import random
-from datetime import datetime, timezone
+import time
+from datetime import UTC, datetime
+
 from confluent_kafka import Producer
 
 conf = {
@@ -25,7 +26,7 @@ def delivery_report(err, msg):
 def generate_telemetry():
     truck_id = f"TRUCK_{random.randint(1, 50000)}"
     temperature = round(random.uniform(-10.0, 40.0), 2)
-    timestamp = datetime.now(timezone.utc).isoformat()
+    timestamp = datetime.now(UTC).isoformat()
     
     return {
         "truck_id": truck_id,

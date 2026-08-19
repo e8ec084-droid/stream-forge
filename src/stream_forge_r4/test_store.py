@@ -234,4 +234,4 @@ def test_state_store_stress_at_scale(store: RocksDBStore) -> None:
 
     # Clean up stress-test records
     for state in states:
-        store.delete(state.truck_id)
+    store.delete(state.truck_id)

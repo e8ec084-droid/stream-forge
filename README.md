@@ -103,3 +103,28 @@ to the RocksDB state store.
 RocksDB provides local persistent state storage while the Kafka changelog
 provides a recovery mechanism. This allows the state store to be rebuilt
 from changelog records when required.
+
+### R4 Validation
+
+The R4 state store was validated using unit tests and project-wide quality checks.
+
+#### State Store Tests
+
+```bash
+pytest src/stream_forge_r4/test_store.py -v
+ Result:
+
+10 tests passed
+Full Test Suite
+pytest -v
+
+Result:
+
+10 tests passed
+1 test skipped
+Code Quality
+ruff check src tests
+
+Result:
+
+All checks passed
