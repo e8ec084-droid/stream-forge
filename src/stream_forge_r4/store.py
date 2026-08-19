@@ -124,7 +124,7 @@ class RocksDBStore:
 
     def get_size_bytes(self) -> int:
         """Return the estimated live state-store size in bytes."""
-        return self.db.property_int_value("rocksdb.estimate-live-data-size")
+        return self.db.property_int_value("rocksdb.estimate-live-data-size") or 0
 
     def close(self) -> None:
         """Close the underlying database."""
