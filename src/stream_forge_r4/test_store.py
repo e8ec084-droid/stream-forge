@@ -182,7 +182,7 @@ def test_changelog_integrity(store: RocksDBStore) -> None:
 
     assert len(set(sequences)) == len(sequences)
     assert sequences == sorted(sequences)
-    
+
 def test_get_size_bytes(store: RocksDBStore) -> None:
     state = TruckState(
         truck_id="size-test-truck",
@@ -199,3 +199,39 @@ def test_get_size_bytes(store: RocksDBStore) -> None:
 
     assert isinstance(size, int)
     assert size >= 0
+def test_state_store_stress_at_scale(store: RocksDBStore) -> None:
+    records = 5000
+
+    states = [
+        TruckState(
+            truck_id=f"stress-truck-{i}",
+            avg_temperature=20.0 + (i % 50),
+            event_count=i,
+            window_start=1723120000 + i,
+            window_end=1723120060 + i,
+            status="healthy",
+        )
+        for i in range(records)
+    ]
+
+    # Write a large number of state records
+    for state in states:
+        store.put(state)
+
+    # Verify all records can be read back correctly
+    for state in states:
+        result = store.get(state.truck_id)
+
+        assert result is not None
+        assert result.truck_id == state.truck_id
+        assert result.avg_temperature == state.avg_temperature
+        assert result.event_count == state.event_count
+
+    # Verify the state store contains data
+    size = store.get_size_bytes()
+    assert isinstance(size, int)
+    assert size > 0
+
+    # Clean up stress-test records
+    for state in states:
+        store.delete(state.truck_id)
