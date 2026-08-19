@@ -182,3 +182,20 @@ def test_changelog_integrity(store: RocksDBStore) -> None:
 
     assert len(set(sequences)) == len(sequences)
     assert sequences == sorted(sequences)
+    
+def test_get_size_bytes(store: RocksDBStore) -> None:
+    state = TruckState(
+        truck_id="size-test-truck",
+        avg_temperature=25.0,
+        event_count=1,
+        window_start=1723120000,
+        window_end=1723120060,
+        status="healthy",
+    )
+
+    store.put(state)
+
+    size = store.get_size_bytes()
+
+    assert isinstance(size, int)
+    assert size >= 0

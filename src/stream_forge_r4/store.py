@@ -122,6 +122,10 @@ class RocksDBStore:
         self.db["__snapshot__:timestamp"] = json.dumps(snapshot_time)
         self.db["__snapshot__:interval"] = json.dumps(settings.snapshot_interval_seconds)
 
+    def get_size_bytes(self) -> int:
+        """Return the estimated live state-store size in bytes."""
+        return self.db.property_int_value("rocksdb.estimate-live-data-size")
+
     def close(self) -> None:
         """Close the underlying database."""
 
