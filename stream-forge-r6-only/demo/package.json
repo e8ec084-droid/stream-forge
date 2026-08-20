@@ -1,0 +1,152 @@
+{
+  "name": "streamforge-dashboard",
+  "displayName": "StreamForge Dashboard",
+  "description": "Real-time distributed stream processing dashboard for StreamForge",
+  "version": "0.1.0",
+  "publisher": "streamforge",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Visualization",
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:streamforgeTopology",
+    "onView:streamforgeMetrics",
+    "onView:streamforgeAudit",
+    "onCommand:streamforge.refresh",
+    "onCommand:streamforge.connect",
+    "onCommand:streamforge.simulateFailure",
+    "onCommand:streamforge.simulateRecovery"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "streamforge",
+          "title": "StreamForge",
+          "icon": "media/streamforge.svg"
+        }
+      ]
+    },
+    "views": {
+      "streamforge": [
+        {
+          "id": "streamforgeTopology",
+          "name": "Topology",
+          "type": "webview"
+        },
+        {
+          "id": "streamforgeMetrics",
+          "name": "Metrics",
+          "type": "webview"
+        },
+        {
+          "id": "streamforgeAudit",
+          "name": "Audit Trail",
+          "type": "webview"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "streamforge.refresh",
+        "title": "Refresh StreamForge Dashboard",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "streamforge.connect",
+        "title": "Connect to StreamForge Cluster",
+        "icon": "$(plug)"
+      },
+      {
+        "command": "streamforge.simulateFailure",
+        "title": "Simulate Worker Failure",
+        "icon": "$(debug-stop)"
+      },
+      {
+        "command": "streamforge.simulateRecovery",
+        "title": "Simulate Worker Recovery",
+        "icon": "$(debug-restart)"
+      },
+      {
+        "command": "streamforge.showTopology",
+        "title": "Show Topology",
+        "icon": "$(type-hierarchy)"
+      },
+      {
+        "command": "streamforge.showMetrics",
+        "title": "Show Metrics",
+        "icon": "$(dashboard)"
+      },
+      {
+        "command": "streamforge.showAudit",
+        "title": "Show Audit Trail",
+        "icon": "$(list-tree)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "streamforge.refresh",
+          "when": "view == streamforgeTopology",
+          "group": "navigation"
+        },
+        {
+          "command": "streamforge.connect",
+          "when": "view == streamforgeTopology",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "streamforge.simulateFailure",
+          "when": "view == streamforgeTopology && viewItem == 'worker'",
+          "group": "inline"
+        },
+        {
+          "command": "streamforge.simulateRecovery",
+          "when": "view == streamforgeTopology && viewItem == 'worker'",
+          "group": "inline"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "StreamForge",
+      "properties": {
+        "streamforge.apiEndpoint": {
+          "type": "string",
+          "default": "http://localhost:8000",
+          "description": "StreamForge FastAPI backend endpoint"
+        },
+        "streamforge.refreshInterval": {
+          "type": "number",
+          "default": 2000,
+          "description": "Dashboard refresh interval in milliseconds"
+        },
+        "streamforge.theme": {
+          "type": "string",
+          "enum": ["dark", "light"],
+          "default": "dark",
+          "description": "Dashboard theme"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0"
+  },
+  "dependencies": {
+    "ws": "^8.16.0"
+  }
+}

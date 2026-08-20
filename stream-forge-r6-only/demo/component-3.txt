@@ -1,0 +1,4 @@
+
+## Backend Integration
+
+The extension is designed to connect to a FastAPI backend:
